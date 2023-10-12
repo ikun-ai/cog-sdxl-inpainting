@@ -18,7 +18,6 @@ import shutil
 
 SDXL_MODEL_CACHE = "sdxl-cache"
 
-
 class KarrasDPM:
     def from_config(config):
         return DPMSolverMultistepScheduler.from_config(config, use_karras_sigmas=True)
