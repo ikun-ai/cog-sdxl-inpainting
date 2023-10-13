@@ -16,7 +16,7 @@ import torch
 import os
 import shutil
 
-SDXL_MODEL_CACHE = "sdxl-cache"
+SDXL_MODEL_CACHE = "./sdxl-cache"
 
 class KarrasDPM:
     def from_config(config):
