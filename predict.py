@@ -15,6 +15,7 @@ from diffusers.utils import load_image
 import torch
 import os
 import shutil
+from PIL import Image
 
 SDXL_MODEL_CACHE = "sdxl-cache"
 
@@ -36,7 +37,7 @@ SCHEDULERS = {
 
 def get_image(path):
     shutil.copyfile(path, "/tmp/image.png")
-    return load_image("/tmp/image.png").convert("RGB")
+    return Image.open("/tmp/image.png").convert("RGB")
 
 
 class Predictor(BasePredictor):
@@ -96,22 +97,27 @@ class Predictor(BasePredictor):
             seed = int.from_bytes(os.urandom(2), "big")
         generator = torch.Generator("cuda").manual_seed(0)
 
+        # Save the original image size
+        original_image = get_image(image)
+        original_size = original_image.size
+
         images = self.__pipe(
             prompt=prompt,
             negative_prompt=negative_prompt,
-            image=get_image(image),
+            image=original_image,
             mask_image=get_image(mask),
-            #height=get_image(image).height,
-            #width=get_image(image).width,
             guidance_scale=guidance_scale,
             num_inference_steps=num_inference_steps,
             strength=prompt_strength,
             generator=generator
         ).images
 
+        # Resize the generated image to the original size
+        resized_image = images[0].resize(original_size)
+
         output_path = f"/tmp/out.png"
 
-        images[0].save(output_path)
+        resized_image.save(output_path)
         print(output_path)
 
         return Path(output_path)
