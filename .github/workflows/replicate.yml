@@ -5,10 +5,9 @@ on:
     branches:
       - main
 
-
 jobs:
   build:
-    runs-on: corcton
+    runs-on: self-hosted
     steps:
       - name: Check out code
         uses: actions/checkout@v4.1.0
