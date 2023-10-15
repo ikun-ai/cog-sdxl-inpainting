@@ -16,6 +16,9 @@ jobs:
         uses: replicate/setup-cog@v1.0.2
         with:
           token: ${{ secrets.REPLICATE_API_TOKEN }}
+          
+      - name: Give Permission 
+        run: chmod +x script/download-weights
         
       - name: Download weights
         run: cog run script/download-weights
