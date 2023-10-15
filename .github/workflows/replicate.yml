@@ -12,8 +12,14 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v4.1.0
         
-      - name: build image
-        run: cog build
+      - name: Log in to Replicate
+        shell: bash
+        if: ${{ inputs.token != '' }}
+        env:
+          REPLICATE_API_TOKEN: ${{ inputs.token }}
+        run: |
+          echo "Found REPLICATE_API_TOKEN in the environment; Authenticating..."
+          echo $REPLICATE_API_TOKEN | cog login --token-stdin
         
       - name: Download weights
         run: cog run script/download-weights
